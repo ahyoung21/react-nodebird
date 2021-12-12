@@ -5,6 +5,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import reducer from '../reducers';
 
 const configureStore = () => {
+  // 크롬 확장프로그램을 사용하려면 미들웨어 설치가 필요함
   const middlewares = [];
   const enhancer =
     process.env.NODE_ENV === 'production'
