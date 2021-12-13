@@ -6,9 +6,10 @@ import post from './post';
 // (이전상태, 액션) => 다음상태
 const rootReducer = combineReducers({
   index: (state = {}, action) => {
-    switch (action.type) {
+    const { type } = action;
+    switch (type) {
       case HYDRATE:
-        console.log(HYDRATE);
+        console.log('HYDRATE', action);
         return {
           ...state,
           ...action.payload,

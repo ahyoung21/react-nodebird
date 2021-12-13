@@ -9,8 +9,8 @@ const configureStore = () => {
   const middlewares = [];
   const enhancer =
     process.env.NODE_ENV === 'production'
-      ? compose(applyMiddleware(...middlewares))
-      : composeWithDevTools(applyMiddleware(...middlewares));
+      ? compose(applyMiddleware(...middlewares)) // 배포용
+      : composeWithDevTools(applyMiddleware(...middlewares)); // 개발용
   const store = createStore(reducer, enhancer);
   return store;
 };
