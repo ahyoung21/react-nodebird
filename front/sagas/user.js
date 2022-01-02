@@ -11,6 +11,17 @@ import {
   throttle, // 설정한 시간 안에는 요청을 한번만 보내도록 설정
   delay,
 } from 'redux-saga/effects';
+import {
+  LOG_IN_REQUEST,
+  LOG_IN_SUCCESS,
+  LOG_IN_FAILURE,
+  LOG_OUT_REQUEST,
+  LOG_OUT_SUCCESS,
+  LOG_OUT_FAILURE,
+  SIGN_UP_REQUEST,
+  SIGN_UP_SUCCESS,
+  SIGN_UP_FAILURE,
+} from '../reducers/user';
 
 function logInAPI(data) {
   return axios.post('/api/login', data);
@@ -22,14 +33,14 @@ function* logIn(action) {
     // const result = yield call(logInAPI, action.data); // 동기 함수 실행
     yield delay(1000);
     yield put({
-      type: 'LOG_IN_SUCCESS',
+      type: LOG_IN_SUCCESS,
       data: action.data,
     });
   } catch (err) {
     yield put({
       // dispatch 개념
-      type: 'LOG_IN_FAILURE',
-      data: err.response.data,
+      type: LOG_IN_FAILURE,
+      error: err.response.data,
     });
   }
 }
@@ -43,30 +54,56 @@ function* logOut() {
     // const result = yield call(logOutAPI); // 동기 함수 실행
     yield delay(1000);
     yield put({
-      type: 'LOG_OUT_SUCCESS',
+      type: LOG_OUT_SUCCESS,
       // data: result.data,
     });
   } catch (err) {
     yield put({
       // dispatch 개념
-      type: 'LOG_OUT_FAILURE',
-      data: err.response.data,
+      type: LOG_OUT_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function signUpAPI() {
+  return axios.post('/api/signUp');
+}
+
+function* signUp() {
+  try {
+    // const result = yield call(signUpAPI); // 동기 함수 실행
+    yield delay(1000);
+    yield put({
+      type: SIGN_UP_SUCCESS,
+      // data: result.data,
+    });
+  } catch (err) {
+    yield put({
+      // dispatch 개념
+      type: SIGN_UP_FAILURE,
+      error: err.response.data,
     });
   }
 }
 
 function* watchLogin() {
   // 로그인이란 액션이 실행될때까지 기다리겠다 take는 한번밖에 사용이 불가능(take)
-  yield takeLatest('LOG_IN_REQUEST', logIn);
+  yield takeLatest(LOG_IN_REQUEST, logIn);
 }
 
 function* watchLogOut() {
-  yield takeEvery('LOG_OUT_REQUEST', logOut);
+  yield takeEvery(LOG_OUT_REQUEST, logOut);
+}
+
+function* watchSignUp() {
+  yield takeEvery(SIGN_UP_REQUEST, signUp);
 }
 
 export default function* userSage() {
   yield all([
     fork(watchLogin), // 비동기 함수 실행
     fork(watchLogOut),
+    fork(watchSignUp),
   ]);
 }

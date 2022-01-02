@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import UserProfile from '../components/UserProfile';
 import LoginForm from '../components/LoginForm';
 import { useSelector } from 'react-redux';
+import { logInDone } from '../reducers/user';
 
 const SearchInput = styled(Input.Search)`
   vertical-align: middle;
@@ -14,7 +15,7 @@ const SearchInput = styled(Input.Search)`
 
 const AppLayout = ({ children }) => {
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { isLoggedIn } = useSelector((state) => state.user);
+  const { me } = useSelector((state) => state.user);
 
   return (
     <div>
@@ -41,7 +42,7 @@ const AppLayout = ({ children }) => {
       {/* gutter 홈통 사이에 간격주는것 */}
       <Row gutter={8}>
         <Col xs={24} md={6}>
-          {isLoggedIn ? <UserProfile /> : <LoginForm />}
+          {me ? <UserProfile /> : <LoginForm />}
         </Col>
         <Col xs={24} md={12}>
           {children}
