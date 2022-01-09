@@ -16,17 +16,6 @@ const Profile = () => {
   //   }
   // }, [isLoggedIn]);
 
-  const followerList = [
-    { nickname: '제로초' },
-    { nickname: '바보' },
-    { nickname: '노드버드오피셜' },
-  ];
-  const followingList = [
-    { nickname: '제로초' },
-    { nickname: '바보' },
-    { nickname: '노드버드오피셜' },
-  ];
-
   return (
     <AppLayout>
       <Head>

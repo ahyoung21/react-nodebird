@@ -8,11 +8,14 @@ import {
   RetweetOutlined,
   HeartTwoTone,
 } from '@ant-design/icons';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PostImages from '../components/postImages';
 import CommentForm from './CommentForm';
+import { REMOVE_POST_REQUEST } from '../reducers/post';
 
 const PostCard = ({ post }) => {
+  const dispatch = useDispatch();
+  const { removePostLoading } = useSelector((state) => state.post);
   const [liked, setLiked] = useState(false);
   const [commentFormOpened, setCommentFormOpened] = useState(false);
   // const id = useSelector((state) => state.user.me?.id);
@@ -22,9 +25,18 @@ const PostCard = ({ post }) => {
     console.log(e);
     setLiked((prev) => !prev);
   }, []);
+
   const onToggleComment = useCallback((e) => {
     setCommentFormOpened((prev) => !prev);
   }, []);
+
+  const onRemovePost = useCallback(() => {
+    dispatch({
+      type: REMOVE_POST_REQUEST,
+      data: post.id,
+    });
+  }, []);
+
   return (
     <div style={{ marginTop: 20 }}>
       <Card
@@ -48,7 +60,13 @@ const PostCard = ({ post }) => {
                 {id && post.User.id === id ? (
                   <>
                     <Button>수정</Button>
-                    <Button tyep="danger">삭제</Button>
+                    <Button
+                      tyep="danger"
+                      onClick={onRemovePost}
+                      loading={removePostLoading}
+                    >
+                      삭제
+                    </Button>
                   </>
                 ) : (
                   <Button>신고</Button>
@@ -70,23 +88,32 @@ const PostCard = ({ post }) => {
         <Button></Button>
       </Card>
       {commentFormOpened && (
-        <div>
+        <>
           <CommentForm post={post} />
           <List
-            header={`${post.Comments.length}개의 댓글`}
+            header={`${post.Comments ? post.Comments.length : 0} 댓글`}
             itemLayout="horizontal"
-            dataSource={post.Comments}
+            dataSource={post.Comments || []}
             renderItem={(item) => (
               <li>
                 <Comment
                   author={item.User.nickname}
-                  avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
+                  avatar={
+                    // <Link
+                    // href={{ pathname: '/user', query: { id: item.User.id } }}
+                    // as={`/user/${item.User.id}`}
+                    // >
+                    // </Link>
+                    <a>
+                      <Avatar>{item.User.nickname[0]}</Avatar>
+                    </a>
+                  }
                   content={item.content}
                 />
               </li>
             )}
           />
-        </div>
+        </>
       )}
     </div>
   );
