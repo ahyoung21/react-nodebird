@@ -10,11 +10,15 @@ import FollowList from '../components/FollowList';
 const Profile = () => {
   const { me } = useSelector((state) => state.user);
 
-  // useEffect(() => {
-  //   if (!isLoggedIn) {
-  //     Router.replace('/');
-  //   }
-  // }, [isLoggedIn]);
+  useEffect(() => {
+    if (!(me && me.id)) {
+      Router.push('/');
+    }
+  }, [me && me.id]);
+
+  if (!me) {
+    return null;
+  }
 
   return (
     <AppLayout>
